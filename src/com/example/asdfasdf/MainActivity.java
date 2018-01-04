@@ -39,6 +39,8 @@ public class MainActivity extends Activity {
 	public static final int MY_MSG = 0;
 	public static final int MY_PIC = 1;
 
+	private List<String> urll;
+	private List<Bitmap> bml;
 	// 查找界面中的控件
 	// final ImageView iv = (ImageView)findViewById(R.id.iv);
 	// final ImageView iv0 = (ImageView)findViewById(R.id.iv0);
@@ -67,14 +69,14 @@ public class MainActivity extends Activity {
 				// 拼接百度图片搜索的链接
 				String url = "http://image.baidu.com/search/index?tn=baiduimage&word=" + word;
 				try {
-					List<String> urls = new LoadImageUrls().execute(url).get();
+					urll = new LoadImageUrls().execute(url).get();
 //					if (tv != null && urls != null) {
 //						for (int i = 0; i < urls.size(); ++i) {
 //							tv.setText(tv.getText().toString() + "\n" + urls.get(i));
 //						}
 //					}
 //					tv.setText(urls.get(0));
-					if (urls.size() > 0) {
+					if (urll.size() > 0) {
 						// tv.setText(urls.size()+"");
 						// tv.setText(url);
 						// for(int i = 0; i < urls.size(); ++i){
@@ -87,15 +89,20 @@ public class MainActivity extends Activity {
 //						tv.setText(urls.size());
 //						for (String iUrl : urls) {
 //						for(int i = 0; i < urls.size(); ++i) {
-						for(int i = 0; i < Math.min(25, urls.size()); ++i) {
-							final String iUrl = urls.get(i);
+						for(int i = 0; i < Math.min(25, urll.size()); ++i) {
+							final String iUrl = urll.get(i);
 							Map<String, Object> map = new HashMap<String, Object>();
 //							tv.setText(tv.getText().toString() + "\n" + bm.getHeight());
 //							byte[] data = NetUtil.doGetImage(iUrl);
 //							Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length); 
-//							Bitmap bm = new LoadPic().execute(iUrl).get();
+							Bitmap bm = new LoadPic().execute(iUrl).get();
 //							map.put("image", bm);
-							map.put("image", new LoadPic().execute(iUrl).get());
+							String info = "Resolution:\t"+bm.getWidth()+"×"+bm.getHeight()
+								+"\nSize:\t"+bm.getByteCount()/1024+"KB"
+								+"\nFrom:\t"+(iUrl.split("/"))[2];
+							map.put("title", info);
+							map.put("image", bm);
+							bml.add(bm);
 //							map.put("image", NetUtil.doGetBitmap(iUrl));
 							imageList.add(map);
 						}
@@ -134,7 +141,7 @@ public class MainActivity extends Activity {
 					e.printStackTrace();
 				}
 			}
-		}).run();
+		}).start();
 	}
 
 	@Override
@@ -143,6 +150,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_images_online);
 
 		li = (ListView) findViewById(R.id.imageList);
+		bml = new ArrayList<Bitmap>();
 		// dialog.setMessage("Loading......");
 
 		// LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(
@@ -243,16 +251,16 @@ public class MainActivity extends Activity {
 		li.setOnItemClickListener(new OnItemClickListener() {
 			
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
 				// TODO Auto-generated method stub
 				final Dialog dialog = new Dialog(MainActivity.this);
 				// 以对话框形式显示图片
 				dialog.setContentView(R.layout.big_image);
-				dialog.setTitle("图片显示");
+				dialog.setTitle("Big Image");
 
 //				if(((LinearLayout)view).getChildCount() < 0) {
-				final LinearLayout ll = ((LinearLayout)view);
-				final ImageView ci = (ImageView)(ll.getChildAt(0));
+//				final LinearLayout ll = ((LinearLayout)view);
+//				final ImageView ci = (ImageView)(ll.getChildAt(0));
 //				((TextView)findViewById(R.id.debug)).setText(ci.getWidth()+" "+ci.getHeight());
 				final ImageView ivImageShow = (ImageView) dialog.findViewById(R.id.iv);
 				ivImageShow.post(new Runnable() {
@@ -266,9 +274,9 @@ public class MainActivity extends Activity {
 //						Drawable bgDrawable = ci.getBackground();
 //						bgDrawable.draw(c);//绘制背景
 //						ci.draw(c);//绘制前景
-						ci.setDrawingCacheEnabled(true);
-						Bitmap bm = ci.getDrawingCache();
-						ivImageShow.setImageBitmap(bm);
+//						ci.setDrawingCacheEnabled(true);
+//						Bitmap bm = ci.getDrawingCache();
+						ivImageShow.setImageBitmap(bml.get((int)id));
 //						ci.setDrawingCacheEnabled(false);
 					}
 				});

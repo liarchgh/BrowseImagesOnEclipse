@@ -5,73 +5,70 @@
     android:orientation="vertical"
     tools:context="${relativePackage}.${activityClass}" >
 
-    <TextView
+<!--     <TextView
         android:id="@+id/debug"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:text="Hello World!" />
+ -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal" >
         <EditText
             android:id="@+id/key"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="20180105" />
+            android:layout_weight="1"
+            android:text="please type the key" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="100dp"
+            android:layout_height="40dp" >
+
+        </Spinner>
+
+        </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal" >
 
         <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:onClick="jump2Online"
+            android:text="Search Online" />
+        <Button
             android:id="@+id/fbSN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_weight="1"
-			 android:onClick="searchImagesByName"
-            android:text="By Name" />
-        <Button
-            android:id="@+id/fbSD"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_weight="1"
-			 android:onClick="searchImagesByDate"
-            android:text="By Date" />
-        <Button
-            android:id="@+id/fbSS"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1"
-			 android:onClick="searchImagesBySize"
-            android:text="By Size" />
-    </LinearLayout>   
+            android:onClick="searchImagesOption"
+            android:text="Search" />
+
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal" >
-	<Button
-		android:id="@+id/fbSA"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:gravity="center"
-            android:layout_weight="1"
-		 android:onClick="searchImages"
-		android:text="Show All Images" />
-	<Button
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:gravity="center"
-            android:layout_weight="1"
-		 android:onClick="jump2Online"
-		android:text="Search Online" />
-	</LinearLayout>
+
+    </LinearLayout>
     <!--
      <ImageView 
         android:id="@+id/fiv0"
         android:layout_width="100dp"
-        android:layout_height="100dp"/>    -->
+        android:layout_height="100dp"/>
+    -->
 
     <ListView
         android:id="@+id/list"
