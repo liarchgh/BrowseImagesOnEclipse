@@ -6,7 +6,7 @@
     
 <LinearLayout 
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="80dp"
     android:orientation="horizontal">
              <EditText
                 android:id="@+id/word"
@@ -16,13 +16,25 @@
                 android:inputType="textPersonName"
                 android:text="Gundam" />
 
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
              <Button
                  android:id="@+id/bts"
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                  android:onClick="searchImages"
+                 android:layout_weight="1"
                  android:text="Search" />
 
+             <Button
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:onClick="jump2Local"
+                 android:layout_weight="1"
+                 android:text="Local" />
+     </LinearLayout>
      </LinearLayout>
 
 <!-- 	<ImageView

@@ -13,6 +13,7 @@ import com.example.Utils.LoadPic;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -279,11 +280,14 @@ public class MainActivity extends Activity {
 					public void onClick(View v) {
 						dialog.dismiss();
 					}
-					
 				});
 				dialog.show();
 //				}
 			}
 		});
+	}
+	public void jump2Local(View view) {
+		Intent intent = new Intent(MainActivity.this, LocalImages.class);
+		startActivity(intent);
 	}
 }
