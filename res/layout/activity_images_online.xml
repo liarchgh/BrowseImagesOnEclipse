@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="horizontal">
+             <EditText
+                android:id="@+id/word"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Gundam" />
+
+             <Button
+                 android:id="@+id/bts"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:onClick="searchImages"
+                 android:text="Search" />
+
+     </LinearLayout>
+
+<!-- 	<ImageView
+		android:id="@+id/iv0"
+		android:layout_width="match_parent"
+		android:layout_height="200dp"
+		android:orientation="vertical"
+		android:src="@drawable/aa"
+		/>
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="138dp"
+        android:text="Hello World!" />
+ -->
+	<ListView
+		android:id="@+id/imageList"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		>
+</ListView>
+</LinearLayout>
