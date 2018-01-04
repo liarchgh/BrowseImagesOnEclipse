@@ -532,7 +532,7 @@ public class LocalImages extends Activity implements OnItemClickListener{
 //
 //	    return result;
 //	}
-		public void Jump2Online(View view) {
+		public void jump2Online(View view) {
             Intent intent = new Intent(LocalImages.this, MainActivity.class);
             startActivity(intent);
 		}
