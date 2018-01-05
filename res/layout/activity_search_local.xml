@@ -5,47 +5,51 @@
     android:orientation="vertical" >
         <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="40dp"
         android:orientation="horizontal" >
-        <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-		android:layout_weight="2"
-        android:orientation="vertical" >
-
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="center"
-            android:onClick="searchImagesByName"
-            android:text="By Name" />
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:onClick="searchImagesByDate"
-            android:text="By Date" />
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:onClick="searchImagesBySize"
-            android:text="By Size" />
-    </LinearLayout>
-
+            android:onClick="searchImagesAll"
+            android:text="显示全部" />
         <EditText
             android:id="@+id/key"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="please type the key" />
+    </LinearLayout>
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal" >
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:onClick="searchImagesByName"
+            android:text="按名字" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:onClick="searchImagesByDate"
+            android:text="按日期" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:onClick="searchImagesBySize"
+            android:text="按大小" />
     </LinearLayout>
     <ListView
         android:id="@+id/listOfLocal"

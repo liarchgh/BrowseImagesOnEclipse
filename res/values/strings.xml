@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">asdfasdf</string>
+    <string name="app_name">ImageShow</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_local_images">LocalImages</string>
-    <string name="title_activity_big_image">BigImage</string>
+    <string name="title_activity_local_images">本地图片</string>
+    <string name="title_activity_big_image">Enlarge</string>
 
 </resources>
