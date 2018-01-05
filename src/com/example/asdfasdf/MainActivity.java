@@ -1,6 +1,7 @@
 package com.example.asdfasdf;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,10 +13,12 @@ import com.example.Utils.LoadPic;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore.Images;
 import android.text.TextUtils;
@@ -39,6 +42,8 @@ public class MainActivity extends Activity {
 	public static final int MY_MSG = 0;
 	public static final int MY_PIC = 1;
 
+	private List<String> urll;
+	private List<Bitmap> bml;
 	// 查找界面中的控件
 	// final ImageView iv = (ImageView)findViewById(R.id.iv);
 	// final ImageView iv0 = (ImageView)findViewById(R.id.iv0);
@@ -66,15 +71,24 @@ public class MainActivity extends Activity {
 				String word = wd.getText().toString();
 				// 拼接百度图片搜索的链接
 				String url = "http://image.baidu.com/search/index?tn=baiduimage&word=" + word;
+				// 拼接bing图片搜索的链接
+//				String host = "https://api.cognitive.microsoft.com";
+//				String path = "/bing/v7.0/images/search";
+//				String searchTerm = "puppies";
+//				String url = host+path+"?q="+URLEncoder.encode(searchQuery, "UTF-8")+word;
+//				""
+//		        URL url = new URL(host + path + "?q=" +  URLEncoder.encode(searchQuery, "UTF-8"));
+//		        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+//		        connection.setRequestProperty("Ocp-Apim-Subscription-Key", subscriptionKey);
 				try {
-					List<String> urls = new LoadImageUrls().execute(url).get();
+					urll = new LoadImageUrls().execute(url).get();
 //					if (tv != null && urls != null) {
 //						for (int i = 0; i < urls.size(); ++i) {
 //							tv.setText(tv.getText().toString() + "\n" + urls.get(i));
 //						}
 //					}
 //					tv.setText(urls.get(0));
-					if (urls.size() > 0) {
+					if (urll.size() > 0) {
 						// tv.setText(urls.size()+"");
 						// tv.setText(url);
 						// for(int i = 0; i < urls.size(); ++i){
@@ -87,15 +101,20 @@ public class MainActivity extends Activity {
 //						tv.setText(urls.size());
 //						for (String iUrl : urls) {
 //						for(int i = 0; i < urls.size(); ++i) {
-						for(int i = 0; i < Math.min(25, urls.size()); ++i) {
-							final String iUrl = urls.get(i);
+						for(int i = 0; i < Math.min(25, urll.size()); ++i) {
+							final String iUrl = urll.get(i);
 							Map<String, Object> map = new HashMap<String, Object>();
 //							tv.setText(tv.getText().toString() + "\n" + bm.getHeight());
 //							byte[] data = NetUtil.doGetImage(iUrl);
 //							Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length); 
-//							Bitmap bm = new LoadPic().execute(iUrl).get();
+							Bitmap bm = new LoadPic().execute(iUrl).get();
 //							map.put("image", bm);
-							map.put("image", new LoadPic().execute(iUrl).get());
+							String info = "Resolution:\t"+bm.getWidth()+"×"+bm.getHeight()
+								+"\nSize:\t"+bm.getByteCount()/1024+"KB"
+								+"\nFrom:\t"+(iUrl.split("/"))[2];
+							map.put("title", info);
+							map.put("image", bm);
+							bml.add(bm);
 //							map.put("image", NetUtil.doGetBitmap(iUrl));
 							imageList.add(map);
 						}
@@ -105,7 +124,7 @@ public class MainActivity extends Activity {
 						final int[] to = { R.id.t0, R.id.imageShow};
 						// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
 						// R.layout.listview, from, to);
-						final SimpleAdapter sa = new SimpleAdapter(MainActivity.this, imageList, R.layout.a_image, from,
+						final SimpleAdapter sa = new SimpleAdapter(MainActivity.this, imageList, R.layout.activity_image_single, from,
 								to);
 						sa.setViewBinder(new SimpleAdapter.ViewBinder() {
 							@Override
@@ -134,7 +153,7 @@ public class MainActivity extends Activity {
 					e.printStackTrace();
 				}
 			}
-		}).run();
+		}).start();
 	}
 
 	@Override
@@ -143,6 +162,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_images_online);
 
 		li = (ListView) findViewById(R.id.imageList);
+		bml = new ArrayList<Bitmap>();
 		// dialog.setMessage("Loading......");
 
 		// LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(
@@ -240,19 +260,53 @@ public class MainActivity extends Activity {
 		// }
 		// }
 		// }).start();
+		li.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
+//				Uri uri = Uri.parse(urll.get((int) id));
+//				Intent downloadIntent = new Intent(Intent.ACTION_VIEW, uri);
+//				startActivity(downloadIntent);
+
+				DownloadManager downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+				String apkUrl = urll.get((int) id);
+				DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl));
+				int end = apkUrl.length(), begin = end - 1;
+				while(begin >= 0 && apkUrl.charAt(begin) != '.') --begin;
+				while(begin >= 0) {
+					--begin;
+					char c = apkUrl.charAt(begin);
+					if(c >= 'a' && c <= 'z') continue;
+					if(c >= 'A' && c <= 'Z') continue;
+					if(c >= '0' && c <= '9') continue;
+					++begin;
+					break;
+				}
+				request.setDestinationInExternalPublicDir("Download", apkUrl.substring(begin, end));
+				// request.setTitle("MeiLiShuo");
+				// request.setDescription("MeiLiShuo desc");
+				// request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+				// request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+				// request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+				// request.setMimeType("application/cn.trinea.download.file");
+				long downloadId = downloadManager.enqueue(request);
+				return true;
+			}
+		});
+
 		li.setOnItemClickListener(new OnItemClickListener() {
 			
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
 				// TODO Auto-generated method stub
 				final Dialog dialog = new Dialog(MainActivity.this);
 				// 以对话框形式显示图片
-				dialog.setContentView(R.layout.big_image);
-				dialog.setTitle("图片显示");
+				dialog.setContentView(R.layout.activity_image_big);
+				dialog.setTitle("Big Image");
 
 //				if(((LinearLayout)view).getChildCount() < 0) {
-				final LinearLayout ll = ((LinearLayout)view);
-				final ImageView ci = (ImageView)(ll.getChildAt(0));
+//				final LinearLayout ll = ((LinearLayout)view);
+//				final ImageView ci = (ImageView)(ll.getChildAt(0));
 //				((TextView)findViewById(R.id.debug)).setText(ci.getWidth()+" "+ci.getHeight());
 				final ImageView ivImageShow = (ImageView) dialog.findViewById(R.id.iv);
 				ivImageShow.post(new Runnable() {
@@ -266,9 +320,9 @@ public class MainActivity extends Activity {
 //						Drawable bgDrawable = ci.getBackground();
 //						bgDrawable.draw(c);//绘制背景
 //						ci.draw(c);//绘制前景
-						ci.setDrawingCacheEnabled(true);
-						Bitmap bm = ci.getDrawingCache();
-						ivImageShow.setImageBitmap(bm);
+//						ci.setDrawingCacheEnabled(true);
+//						Bitmap bm = ci.getDrawingCache();
+						ivImageShow.setImageBitmap(bml.get((int)id));
 //						ci.setDrawingCacheEnabled(false);
 					}
 				});
