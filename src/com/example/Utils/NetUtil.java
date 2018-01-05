@@ -14,6 +14,37 @@ import android.graphics.BitmapFactory;
  */
 
 public class NetUtil {
+//    public static String doGetBingApi(String address, String word) throws IOException{
+//        URL url = new URL(address);
+//        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+//        conn.setRequestProperty(field, word);
+//        conn.setConnectTimeout(10000);
+////        conn.setRequestProperty("Accept", "image/jepg,*/*");
+////        conn.setRequestProperty("Connection", "close");
+//        conn.setRequestMethod("GET");
+//        String msg = null; 
+//        try {
+//            InputStream in = conn.getInputStream();
+//            ByteArrayOutputStream out = new ByteArrayOutputStream();
+//            byte[] buffer = new byte[1024];
+//
+//            while(true){
+//                int len = in.read(buffer);
+//                if(len == -1){
+//                    break;
+//                }
+//                out.write(buffer, 0, len);
+//            }
+//            byte[] arr = out.toByteArray();
+//            msg = new String(arr, "UTF-8");
+//            in.close();
+//            out.close();
+//        }
+//        catch(Exception e){
+////        	msg = "e";
+//        }
+//		return msg;
+//    }
     public static String doGet(String address) throws IOException{
         URL url = new URL(address);
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();

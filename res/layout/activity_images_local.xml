@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal" >
-        <EditText
+<!--         <EditText
             android:id="@+id/key"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
@@ -24,14 +24,7 @@
             android:inputType="textPersonName"
             android:layout_weight="1"
             android:text="please type the key" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="100dp"
-            android:layout_height="40dp" >
-
-        </Spinner>
-
+ -->
         </LinearLayout>
 
     <LinearLayout
@@ -52,17 +45,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:onClick="searchImagesOption"
+            android:onClick="searchImages"
             android:text="Search" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal" >
-
-    </LinearLayout>
     <!--
      <ImageView 
         android:id="@+id/fiv0"

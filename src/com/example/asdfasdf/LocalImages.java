@@ -46,7 +46,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 public class LocalImages extends Activity implements OnItemClickListener {
-	private Spinner spinner;
+//	private Spinner spinner;
 	// private ImageView iv;
 	private EditText wtv;
 	// private EditText edit;
@@ -55,7 +55,10 @@ public class LocalImages extends Activity implements OnItemClickListener {
 	// String input = "";
 
 	private List<String> uril;
+	private List<Integer> l2b;
 	private List<Bitmap> bml;
+
+	OnItemClickListener imageClick;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 		iLO = (ListView) findViewById(R.id.list);
 		wtv = (EditText)findViewById(R.id.key);
 		bml = new ArrayList<Bitmap>();
+		l2b = new ArrayList<Integer>();
 
 		//预加载图片的uri和图片bitmap
 		new Thread(new Runnable() {
@@ -85,64 +89,65 @@ public class LocalImages extends Activity implements OnItemClickListener {
 			}
 		}).start();
 
-		iLO.setOnItemClickListener(new OnItemClickListener() {
-			
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
-				// TODO Auto-generated method stub
-				final Dialog dialog = new Dialog(LocalImages.this);
-				// 以对话框形式显示图片
-				dialog.setContentView(R.layout.big_image);
-				dialog.setTitle("Big Image");
+//		OnItemClickListener imageClick = 
 
-//				if(((LinearLayout)view).getChildCount() < 0) {
-//				final LinearLayout ll = ((LinearLayout)view);
-//				final ImageView ci = (ImageView)(ll.getChildAt(0));
-//				((TextView)findViewById(R.id.debug)).setText(ci.getWidth()+" "+ci.getHeight());
-				final ImageView ivImageShow = (ImageView) dialog.findViewById(R.id.iv);
-				ivImageShow.post(new Runnable() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-//						Bitmap bm = Bitmap.createBitmap(ci.getWidth(), ci.getHeight(), Bitmap.Config.ARGB_8888);
-		//				ivImageShow.setImageBitmap(parent.getView getChildAt(position-parent.getFirstVisiblePosition()).getview);
-//						Canvas c = new Canvas(bm);//使用bitmap构建一个Canvas，绘制的所有内容都是绘制在此Bitmap上的
-//						Drawable bgDrawable = ci.getBackground();
-//						bgDrawable.draw(c);//绘制背景
-//						ci.draw(c);//绘制前景
-//						ci.setDrawingCacheEnabled(true);
-//						Bitmap bm = ci.getDrawingCache();
-						ivImageShow.setImageBitmap(bml.get((int)id));
-//						ci.setDrawingCacheEnabled(false);
-					}
-				});
-				Button btnClose = (Button) dialog.findViewById(R.id.fbtn);
-
-				btnClose.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-					}
-					
-				});
-				dialog.show();
-//				}
-			}
-		});
-
+//		iLO.setOnItemClickListener(new OnItemClickListener() {
+//			
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
+//				// TODO Auto-generated method stub
+//				final Dialog dialog = new Dialog(LocalImages.this);
+//				// 以对话框形式显示图片
+//				dialog.setContentView(R.layout.big_image);
+//				dialog.setTitle("Big Image");
+//
+////				if(((LinearLayout)view).getChildCount() < 0) {
+////				final LinearLayout ll = ((LinearLayout)view);
+////				final ImageView ci = (ImageView)(ll.getChildAt(0));
+////				((TextView)findViewById(R.id.debug)).setText(ci.getWidth()+" "+ci.getHeight());
+//				final ImageView ivImageShow = (ImageView) dialog.findViewById(R.id.iv);
+//				ivImageShow.post(new Runnable() {
+//					
+//					@Override
+//					public void run() {
+//						// TODO Auto-generated method stub
+////						Bitmap bm = Bitmap.createBitmap(ci.getWidth(), ci.getHeight(), Bitmap.Config.ARGB_8888);
+//		//				ivImageShow.setImageBitmap(parent.getView getChildAt(position-parent.getFirstVisiblePosition()).getview);
+////						Canvas c = new Canvas(bm);//使用bitmap构建一个Canvas，绘制的所有内容都是绘制在此Bitmap上的
+////						Drawable bgDrawable = ci.getBackground();
+////						bgDrawable.draw(c);//绘制背景
+////						ci.draw(c);//绘制前景
+////						ci.setDrawingCacheEnabled(true);
+////						Bitmap bm = ci.getDrawingCache();
+//						ivImageShow.setImageBitmap(bml.get((int)id));
+////						ci.setDrawingCacheEnabled(false);
+//					}
+//				});
+//				Button btnClose = (Button) dialog.findViewById(R.id.fbtn);
+//
+//				btnClose.setOnClickListener(new OnClickListener() {
+//					
+//					@Override
+//					public void onClick(View v) {
+//						dialog.dismiss();
+//					}
+//					
+//				});
+//				dialog.show();
+////				}
+//			}
+//		});
 
 //		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_images_local);
-		spinner = (Spinner) findViewById(R.id.spinner);
-		ArrayList<String> list = new ArrayList<String>();
-		list.add("Show All");
-		list.add("By Name");
-		list.add("By Date");
-		list.add("By Size");
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
-		spinner.setAdapter(adapter);
+//		spinner = (Spinner) findViewById(R.id.spinner);
+//		ArrayList<String> list = new ArrayList<String>();
+//		list.add("Show All");
+//		list.add("By Name");
+//		list.add("By Date");
+//		list.add("By Size");
+//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
+//		spinner.setAdapter(adapter);
 		// iv = (ImageView) findViewById(R.id.fiv0);
 		// tv0 = (TextView)findViewById(R.id.ftv0);
 		// initViews();
@@ -167,11 +172,11 @@ public class LocalImages extends Activity implements OnItemClickListener {
 		iLO.post(new Runnable() {
 			@Override
 			public void run() {
+				l2b.clear();
 				List<String> uris = LoadLocalImageUris.getAllPhotoInfo(LocalImages.this);
 				try {
 					final List<Map<String, Object>> imageList = new ArrayList<Map<String, Object>>();
 					for (int i = 0; i < uris.size(); ++i) {
-
 						float lmt = Float.parseFloat(wtv.getText().toString());
 						final String iUrl = uris.get(i);
 						File ig = new File(iUrl);
@@ -189,11 +194,12 @@ public class LocalImages extends Activity implements OnItemClickListener {
 						info += "\nSize:\t" + (float) (Math.round((ig.length() * 100 / 1024))) / 100 + "KB";
 						map.put("title", info);
 						map.put("image", bm);
+						l2b.add(i);
 						imageList.add(map);
 					}
 					final String[] from = { "title", "image" };
 					final int[] to = { R.id.t0, R.id.imageShow };
-					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.a_image, from, to);
+					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.activity_image_single, from, to);
 					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
 						@Override
 						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
@@ -235,6 +241,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 
 			@Override
 			public void run() {
+				l2b.clear();
 				// TODO Auto-generated method stub
 				// List<String>uris = getSystemPhotoList(LocalImages.this);
 				List<String> uris = LoadLocalImageUris.getAllPhotoInfo(LocalImages.this);
@@ -266,6 +273,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 						if (ttime1 != 0) {
 							continue;
 						}
+						l2b.add(i);
 						Map<String, Object> map = new HashMap<String, Object>();
 						Bitmap bm = null;
 						// bm =
@@ -289,7 +297,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 					final int[] to = { R.id.t0, R.id.imageShow };
 					// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
 					// R.layout.listview, from, to);
-					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.a_image, from, to);
+					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.activity_image_single, from, to);
 					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
 						@Override
 						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
@@ -332,6 +340,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 
 			@Override
 			public void run() {
+				l2b.clear();
 				// TODO Auto-generated method stub
 				// List<String>uris = getSystemPhotoList(LocalImages.this);
 				List<String> uris = LoadLocalImageUris.getAllPhotoInfo(LocalImages.this);
@@ -349,6 +358,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 						if (!ig.getName().equals(word)) {
 							continue;
 						}
+						l2b.add(i);
 						Map<String, Object> map = new HashMap<String, Object>();
 						Bitmap bm = null;
 						// bm =
@@ -373,7 +383,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 					final int[] to = { R.id.t0, R.id.imageShow };
 					// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
 					// R.layout.listview, from, to);
-					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.a_image, from, to);
+					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.activity_image_single, from, to);
 					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
 						@Override
 						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
@@ -405,22 +415,22 @@ public class LocalImages extends Activity implements OnItemClickListener {
 
 		// }
 	}
-	public void searchImagesOption(View view) {
-		switch((int)spinner.getSelectedItemId()) {
-		case 0:
-			searchImages(view);
-			break;
-		case 1:
-			searchImagesByName(view);
-			break;
-		case 2:
-			searchImagesByDate(view);
-			break;
-		case 3:
-			searchImagesBySize(view);
-			break;
-		}
-	}
+//	public void searchImagesOption(View view) {
+//		switch((int)spinner.getSelectedItemId()) {
+//		case 0:
+//			searchImages(view);
+//			break;
+//		case 1:
+//			searchImagesByName(view);
+//			break;
+//		case 2:
+//			searchImagesByDate(view);
+//			break;
+//		case 3:
+//			searchImagesBySize(view);
+//			break;
+//		}
+//	}
 
 	// ba.setOnClickListener(new OnClickListener() {
 	public void searchImages(View view) {
@@ -429,7 +439,8 @@ public class LocalImages extends Activity implements OnItemClickListener {
 		// TODO Auto-generated method stub
 		// printImage();
 
-		iLO.post(new Runnable() {
+		setContentView(R.layout.activity_search_local);
+		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -440,67 +451,124 @@ public class LocalImages extends Activity implements OnItemClickListener {
 				// for(String u : uris) {
 				// tv0.setText(tv0.getText()+"\n"+u);
 				// }
-				try {
-					final List<Map<String, Object>> imageList = new ArrayList<Map<String, Object>>();
-					for (int i = 0; i < uris.size(); ++i) {
-						final String iUrl = uris.get(i);
-						Map<String, Object> map = new HashMap<String, Object>();
-						Bitmap bm = null;
-						// bm =
-						// BitmapFactory.decodeStream(LocalImages.this.getContentResolver().openInputStream(Uri.parse(uris.get(0))));
-						bm = BitmapFactory.decodeFile(iUrl);
-						File ig = new File(iUrl);
-						// TextView wtv = (TextView)findViewById(R.id.word);
-						// wtv.setText(ig.getName());
-						// bn.setText(ig.getName());
-						String info = "Image Name:\t" + ig.getName();
-						info += "\nDate:\t"
-								+ new SimpleDateFormat("yyyy-MM-dd hh:mm").format(new Date(ig.lastModified()));
-						info += "\nSize:\t" + (float) (Math.round((ig.length() * 100 / 1024))) / 100 + "KB";
-						map.put("title", info);
-						// tv.setText(tv.getText().toString() + "\n" + bm.getHeight());
-						// byte[] data = NetUtil.doGetImage(iUrl);
-						// Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
-						// Bitmap bm = new LoadPic().execute(iUrl).get();
-						// map.put("image", bm);
+				iLO = (ListView) findViewById(R.id.listOfLocal);
+				iLO.post(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+				//初始化
+				wtv = (EditText)findViewById(R.id.key);
+						
+				iLO.setOnItemClickListener(new OnItemClickListener() {
+			
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
+				// TODO Auto-generated method stub
+				final Dialog dialog = new Dialog(LocalImages.this);
+				// 以对话框形式显示图片
+				dialog.setContentView(R.layout.activity_image_big);
+				dialog.setTitle("Big Image");
 
-						map.put("image", bm);
-						// map.put("image", NetUtil.doGetBitmap(iUrl));
-						imageList.add(map);
+//				if(((LinearLayout)view).getChildCount() < 0) {
+//				final LinearLayout ll = ((LinearLayout)view);
+//				final ImageView ci = (ImageView)(ll.getChildAt(0));
+//				((TextView)findViewById(R.id.debug)).setText(ci.getWidth()+" "+ci.getHeight());
+				final ImageView ivImageShow = (ImageView) dialog.findViewById(R.id.iv);
+				ivImageShow.post(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+//						Bitmap bm = Bitmap.createBitmap(ci.getWidth(), ci.getHeight(), Bitmap.Config.ARGB_8888);
+		//				ivImageShow.setImageBitmap(parent.getView getChildAt(position-parent.getFirstVisiblePosition()).getview);
+//						Canvas c = new Canvas(bm);//使用bitmap构建一个Canvas，绘制的所有内容都是绘制在此Bitmap上的
+//						Drawable bgDrawable = ci.getBackground();
+//						bgDrawable.draw(c);//绘制背景
+//						ci.draw(c);//绘制前景
+//						ci.setDrawingCacheEnabled(true);
+//						Bitmap bm = ci.getDrawingCache();
+						ivImageShow.setImageBitmap(bml.get(l2b.get((int)id)));
+//						ci.setDrawingCacheEnabled(false);
 					}
-					final String[] from = { "title", "image" };
-					final int[] to = { R.id.t0, R.id.imageShow };
-					// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
-					// R.layout.listview, from, to);
-					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.a_image, from, to);
-					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
-						@Override
-						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
-							// TODO Auto-generated method stub
-							if (aView instanceof ImageView && attentionList instanceof Bitmap) {
-								ImageView iv = (ImageView) aView;
-								iv.setImageBitmap((Bitmap) attentionList);
-								return true;
-							} else if (aView instanceof TextView && attentionList instanceof String) {
-								TextView tt = (TextView) aView;
-								tt.setText((String) attentionList);
-								return true;
-							}
-							return false;
-						}
-					});
-					iLO.post(new Runnable() {
-						@Override
-						public void run() {
-							iLO.setAdapter(sa);
-						}
-					});
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				});
+				Button btnClose = (Button) dialog.findViewById(R.id.fbtn);
+
+				btnClose.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+					
+				});
+				dialog.show();
+//				}
 			}
 		});
+					}
+				});
+//				try {
+//					final List<Map<String, Object>> imageList = new ArrayList<Map<String, Object>>();
+//					for (int i = 0; i < uris.size(); ++i) {
+//						final String iUrl = uris.get(i);
+//						Map<String, Object> map = new HashMap<String, Object>();
+//						Bitmap bm = null;
+//						// bm =
+//						// BitmapFactory.decodeStream(LocalImages.this.getContentResolver().openInputStream(Uri.parse(uris.get(0))));
+//						bm = BitmapFactory.decodeFile(iUrl);
+//						File ig = new File(iUrl);
+//						// TextView wtv = (TextView)findViewById(R.id.word);
+//						// wtv.setText(ig.getName());
+//						// bn.setText(ig.getName());
+//						String info = "Image Name:\t" + ig.getName();
+//						info += "\nDate:\t"
+//								+ new SimpleDateFormat("yyyy-MM-dd hh:mm").format(new Date(ig.lastModified()));
+//						info += "\nSize:\t" + (float) (Math.round((ig.length() * 100 / 1024))) / 100 + "KB";
+//						map.put("title", info);
+//						// tv.setText(tv.getText().toString() + "\n" + bm.getHeight());
+//						// byte[] data = NetUtil.doGetImage(iUrl);
+//						// Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
+//						// Bitmap bm = new LoadPic().execute(iUrl).get();
+//						// map.put("image", bm);
+//
+//						map.put("image", bm);
+//						// map.put("image", NetUtil.doGetBitmap(iUrl));
+//						imageList.add(map);
+//					}
+//					final String[] from = { "title", "image" };
+//					final int[] to = { R.id.t0, R.id.imageShow };
+//					// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
+//					// R.layout.listview, from, to);
+//					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.a_image, from, to);
+//					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
+//						@Override
+//						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
+//							// TODO Auto-generated method stub
+//							if (aView instanceof ImageView && attentionList instanceof Bitmap) {
+//								ImageView iv = (ImageView) aView;
+//								iv.setImageBitmap((Bitmap) attentionList);
+//								return true;
+//							} else if (aView instanceof TextView && attentionList instanceof String) {
+//								TextView tt = (TextView) aView;
+//								tt.setText((String) attentionList);
+//								return true;
+//							}
+//							return false;
+//						}
+//					});
+//					iLO.post(new Runnable() {
+//						@Override
+//						public void run() {
+//							iLO.setAdapter(sa);
+//						}
+//					});
+//				} catch (Exception e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+			}
+		}).start();
 
 		// }
 	}

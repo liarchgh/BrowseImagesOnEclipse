@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 public class LoadImageUrls extends AsyncTask<String, Integer, List<String>>{
     private TextView tv;
+    private String word = null;
 
     public LoadImageUrls(TextView imageView) {
         this.setTv(imageView);
@@ -40,46 +41,81 @@ public class LoadImageUrls extends AsyncTask<String, Integer, List<String>>{
     protected List<String> doInBackground(String... strings) {
         publishProgress(0);
         String url = strings[0];
-        List<String>urls = new ArrayList<String>();
-//        tv.setText(url);
-        try {
-            String html = NetUtil.doGet(url);
-//            String html = url;
-//            tv.setText("get html over");
-//            tv.setText(html);
-//            Pattern pattern = Pattern.compile("^(\'imgData\',.*;$");
-//            Matcher matcher = pattern.matcher(html);
-//            boolean b= matcher.matches();
-//            //当条件满足时，将返回true，否则返回false
-//            System.out.println(b);
-//            publishProgress(1);
+//		if (strings.length > 1) {
+//			word = strings[1];
+//			List<String> urls = new ArrayList<String>();
+//			// tv.setText(url);
+//			try {
+//				String html = NetUtil.doGetBingApi(url, word);
+//				String jsonRe = "\\('imgData',[^)]*\\)";
+//				Pattern pattern = Pattern.compile(jsonRe);
+//				// publishProgress(2);
+//				Matcher matcher = pattern.matcher(html);
+//				// publishProgress(3);
+//				while (matcher.find()) {
+//					// tv.setText(matcher.groupCount());
+//					// urls.add(matcher.group());
+//					String objUrls = matcher.group();
+//					// String urlJsonRe = "\"thumbURL\": \"[^\"]*\"";
+//					String urlJsonRe = "\"thumbURL\":\"[^\"]*\"";
+//					// String urlJsonRe = "http";
+//					Pattern urlJsonPattern = Pattern.compile(urlJsonRe);
+//					Matcher urlJsonMc = urlJsonPattern.matcher(objUrls);
+//					while (urlJsonMc.find()) {
+//						// urls.add(urlJsonMc.group());
+//						String tt = urlJsonMc.group();
+//						int send = tt.length() - 1, sbegin = 12;
+//						send = send >= 0 ? send : 0;
+//						urls.add(tt.substring(sbegin, send).replaceAll("\\\\/", "/").replace("\n", ""));
+//					}
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			return urls;
+//		}		else {
 
-            String jsonRe = "\\('imgData',[^)]*\\)";
-            Pattern pattern = Pattern.compile(jsonRe);
-//            publishProgress(2);
-            Matcher matcher = pattern.matcher(html);
-//            publishProgress(3);
-            while(matcher.find()){
-//				tv.setText(matcher.groupCount());
-//                urls.add(matcher.group());
-                String objUrls = matcher.group();
-//                String urlJsonRe = "\"thumbURL\": \"[^\"]*\"";
-                String urlJsonRe = "\"thumbURL\":\"[^\"]*\"";
-//                String urlJsonRe = "http";
-                Pattern urlJsonPattern = Pattern.compile(urlJsonRe);
-                Matcher urlJsonMc = urlJsonPattern.matcher(objUrls);
-                while(urlJsonMc.find()){
-//					urls.add(urlJsonMc.group());
-                    String tt = urlJsonMc.group();
-                    int send = tt.length() - 1, sbegin = 12;
-                    send = send>=0?send:0;
-                    urls.add(tt.substring(sbegin, send).replaceAll("\\\\/", "/").replace("\n", ""));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return urls;
+			List<String> urls = new ArrayList<String>();
+			// tv.setText(url);
+			try {
+				String html = NetUtil.doGet(url);
+				// String html = url;
+				// tv.setText("get html over");
+				// tv.setText(html);
+				// Pattern pattern = Pattern.compile("^(\'imgData\',.*;$");
+				// Matcher matcher = pattern.matcher(html);
+				// boolean b= matcher.matches();
+				// //当条件满足时，将返回true，否则返回false
+				// System.out.println(b);
+				// publishProgress(1);
+
+				String jsonRe = "\\('imgData',[^)]*\\)";
+				Pattern pattern = Pattern.compile(jsonRe);
+				// publishProgress(2);
+				Matcher matcher = pattern.matcher(html);
+				// publishProgress(3);
+				while (matcher.find()) {
+					// tv.setText(matcher.groupCount());
+					// urls.add(matcher.group());
+					String objUrls = matcher.group();
+					// String urlJsonRe = "\"thumbURL\": \"[^\"]*\"";
+					String urlJsonRe = "\"thumbURL\":\"[^\"]*\"";
+					// String urlJsonRe = "http";
+					Pattern urlJsonPattern = Pattern.compile(urlJsonRe);
+					Matcher urlJsonMc = urlJsonPattern.matcher(objUrls);
+					while (urlJsonMc.find()) {
+						// urls.add(urlJsonMc.group());
+						String tt = urlJsonMc.group();
+						int send = tt.length() - 1, sbegin = 12;
+						send = send >= 0 ? send : 0;
+						urls.add(tt.substring(sbegin, send).replaceAll("\\\\/", "/").replace("\n", ""));
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return urls;
+//		}
     }
 
     @Override

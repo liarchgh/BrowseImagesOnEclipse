@@ -1,6 +1,7 @@
 package com.example.asdfasdf;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +71,15 @@ public class MainActivity extends Activity {
 				String word = wd.getText().toString();
 				// 拼接百度图片搜索的链接
 				String url = "http://image.baidu.com/search/index?tn=baiduimage&word=" + word;
+				// 拼接bing图片搜索的链接
+//				String host = "https://api.cognitive.microsoft.com";
+//				String path = "/bing/v7.0/images/search";
+//				String searchTerm = "puppies";
+//				String url = host+path+"?q="+URLEncoder.encode(searchQuery, "UTF-8")+word;
+//				""
+//		        URL url = new URL(host + path + "?q=" +  URLEncoder.encode(searchQuery, "UTF-8"));
+//		        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+//		        connection.setRequestProperty("Ocp-Apim-Subscription-Key", subscriptionKey);
 				try {
 					urll = new LoadImageUrls().execute(url).get();
 //					if (tv != null && urls != null) {
@@ -114,7 +124,7 @@ public class MainActivity extends Activity {
 						final int[] to = { R.id.t0, R.id.imageShow};
 						// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
 						// R.layout.listview, from, to);
-						final SimpleAdapter sa = new SimpleAdapter(MainActivity.this, imageList, R.layout.a_image, from,
+						final SimpleAdapter sa = new SimpleAdapter(MainActivity.this, imageList, R.layout.activity_image_single, from,
 								to);
 						sa.setViewBinder(new SimpleAdapter.ViewBinder() {
 							@Override
@@ -291,7 +301,7 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 				final Dialog dialog = new Dialog(MainActivity.this);
 				// 以对话框形式显示图片
-				dialog.setContentView(R.layout.big_image);
+				dialog.setContentView(R.layout.activity_image_big);
 				dialog.setTitle("Big Image");
 
 //				if(((LinearLayout)view).getChildCount() < 0) {
