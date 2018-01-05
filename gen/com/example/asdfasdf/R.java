@@ -15,17 +15,18 @@ public final class R {
         public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int bts=0x7f060007;
-        public static final int fbSN=0x7f060004;
-        public static final int fbtn=0x7f060002;
-        public static final int imageList=0x7f060008;
-        public static final int imageShow=0x7f060003;
-        public static final int iv=0x7f060000;
-        public static final int key=0x7f060009;
-        public static final int list=0x7f060005;
-        public static final int listOfLocal=0x7f06000a;
-        public static final int t0=0x7f060001;
-        public static final int word=0x7f060006;
+        public static final int bts=0x7f060008;
+        public static final int fbSN=0x7f060005;
+        public static final int fbtn=0x7f060003;
+        public static final int imageList=0x7f060009;
+        public static final int imageShow=0x7f060004;
+        public static final int ivBig=0x7f060001;
+        public static final int key=0x7f06000a;
+        public static final int list=0x7f060006;
+        public static final int listOfLocal=0x7f06000b;
+        public static final int ll0=0x7f060000;
+        public static final int t0=0x7f060002;
+        public static final int word=0x7f060007;
     }
     public static final class layout {
         public static final int activity_image_big=0x7f030000;

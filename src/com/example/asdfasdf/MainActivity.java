@@ -42,8 +42,11 @@ public class MainActivity extends Activity {
 	public static final int MY_MSG = 0;
 	public static final int MY_PIC = 1;
 
+	private String lastWord;
 	private List<String> urll;
 	private List<Bitmap> bml;
+
+	private EditText etWd = null;
 	// 查找界面中的控件
 	// final ImageView iv = (ImageView)findViewById(R.id.iv);
 	// final ImageView iv0 = (ImageView)findViewById(R.id.iv0);
@@ -56,6 +59,7 @@ public class MainActivity extends Activity {
 	private ListView li;
 
 	public void searchImages(View view) {
+		bml.clear();
 		new Thread(new Runnable() {
 
 			@Override
@@ -69,6 +73,7 @@ public class MainActivity extends Activity {
 				// 加载百度图片搜索获取的链接
 				// 获取用户输入的关键字
 				String word = wd.getText().toString();
+				lastWord = word;
 				// 拼接百度图片搜索的链接
 				String url = "http://image.baidu.com/search/index?tn=baiduimage&word=" + word;
 				// 拼接bing图片搜索的链接
@@ -161,6 +166,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_images_online);
 
+		etWd = (EditText) findViewById(R.id.word);
 		li = (ListView) findViewById(R.id.imageList);
 		bml = new ArrayList<Bitmap>();
 		// dialog.setMessage("Loading......");
@@ -295,53 +301,44 @@ public class MainActivity extends Activity {
 		});
 
 		li.setOnItemClickListener(new OnItemClickListener() {
-			
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
-				// TODO Auto-generated method stub
-				final Dialog dialog = new Dialog(MainActivity.this);
-				// 以对话框形式显示图片
-				dialog.setContentView(R.layout.activity_image_big);
-				dialog.setTitle("Big Image");
 
-//				if(((LinearLayout)view).getChildCount() < 0) {
-//				final LinearLayout ll = ((LinearLayout)view);
-//				final ImageView ci = (ImageView)(ll.getChildAt(0));
-//				((TextView)findViewById(R.id.debug)).setText(ci.getWidth()+" "+ci.getHeight());
-				final ImageView ivImageShow = (ImageView) dialog.findViewById(R.id.iv);
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
+				setContentView(R.layout.activity_image_big);
+				final ImageView ivImageShow = (ImageView) findViewById(R.id.ivBig);
 				ivImageShow.post(new Runnable() {
-					
+
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
-//						Bitmap bm = Bitmap.createBitmap(ci.getWidth(), ci.getHeight(), Bitmap.Config.ARGB_8888);
-		//				ivImageShow.setImageBitmap(parent.getView getChildAt(position-parent.getFirstVisiblePosition()).getview);
-//						Canvas c = new Canvas(bm);//使用bitmap构建一个Canvas，绘制的所有内容都是绘制在此Bitmap上的
-//						Drawable bgDrawable = ci.getBackground();
-//						bgDrawable.draw(c);//绘制背景
-//						ci.draw(c);//绘制前景
-//						ci.setDrawingCacheEnabled(true);
-//						Bitmap bm = ci.getDrawingCache();
-						ivImageShow.setImageBitmap(bml.get((int)id));
-//						ci.setDrawingCacheEnabled(false);
+						ivImageShow.setImageBitmap(bml.get((int) id));
 					}
 				});
-				Button btnClose = (Button) dialog.findViewById(R.id.fbtn);
-
-				btnClose.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-					}
-				});
-				dialog.show();
-//				}
 			}
 		});
 	}
 	public void jump2Local(View view) {
 		Intent intent = new Intent(MainActivity.this, LocalImages.class);
 		startActivity(intent);
+	}
+
+	public void jump2List(View view) {
+		setContentView(R.layout.activity_images_local);
+//		li.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
+//				setContentView(R.layout.activity_image_big);
+//				final ImageView ivImageShow = (ImageView) findViewById(R.id.ivBig);
+//				ivImageShow.post(new Runnable() {
+//
+//					@Override
+//					public void run() {
+//						ivImageShow.setImageBitmap(bml.get((int) id));
+//					}
+//				});
+//			}
+//		});
+//		etWd.setText(lastWord);
+//		searchImages(view);
 	}
 }

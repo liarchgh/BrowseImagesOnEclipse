@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 public class LoadLocalImageUris {
-public static List<String> getAllPhotoInfo(final Activity at) {
+public static List<String> getAllLocalImagesUri(final Activity at) {
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
