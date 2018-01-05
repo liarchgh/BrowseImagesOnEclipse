@@ -12,10 +12,12 @@ import com.example.Utils.LoadPic;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore.Images;
 import android.text.TextUtils;
@@ -248,6 +250,40 @@ public class MainActivity extends Activity {
 		// }
 		// }
 		// }).start();
+		li.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
+//				Uri uri = Uri.parse(urll.get((int) id));
+//				Intent downloadIntent = new Intent(Intent.ACTION_VIEW, uri);
+//				startActivity(downloadIntent);
+
+				DownloadManager downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+				String apkUrl = urll.get((int) id);
+				DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl));
+				int end = apkUrl.length(), begin = end - 1;
+				while(begin >= 0 && apkUrl.charAt(begin) != '.') --begin;
+				while(begin >= 0) {
+					--begin;
+					char c = apkUrl.charAt(begin);
+					if(c >= 'a' && c <= 'z') continue;
+					if(c >= 'A' && c <= 'Z') continue;
+					if(c >= '0' && c <= '9') continue;
+					++begin;
+					break;
+				}
+				request.setDestinationInExternalPublicDir("Download", apkUrl.substring(begin, end));
+				// request.setTitle("MeiLiShuo");
+				// request.setDescription("MeiLiShuo desc");
+				// request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+				// request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+				// request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+				// request.setMimeType("application/cn.trinea.download.file");
+				long downloadId = downloadManager.enqueue(request);
+				return true;
+			}
+		});
+
 		li.setOnItemClickListener(new OnItemClickListener() {
 			
 			@Override
