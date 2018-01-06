@@ -89,14 +89,14 @@ public class Online extends Activity {
 				try {
 //					wd.setText(url);
 					urll = new LoadImageUrls(url).execute().get();
-				lv.post(new Runnable() {
-					@Override
-					public void run() {
-						Dialog dl = new Dialog(Online.this);
-						dl.setTitle(""+urll.size());
-						dl.show();
-					}
-				});
+//				lv.post(new Runnable() {
+//					@Override
+//					public void run() {
+//						Dialog dl = new Dialog(Online.this);
+//						dl.setTitle(""+urll.size());
+//						dl.show();
+//					}
+//				});
 //					wd.setText(urll.size());
 //					if (tv != null && urls != null) {
 //						for (int i = 0; i < urls.size(); ++i) {
@@ -328,12 +328,12 @@ public class Online extends Activity {
 			}
 		});
 	}
-	public void jump2Local(View view) {
+	public void jump2Home(View view) {
 		Intent intent = new Intent(Online.this, HomeAndLocal.class);
 		startActivity(intent);
 	}
 	public void jump2List(View view) {
-		setContentView(R.layout.activity_images_home);
+		jump2Home(view);
 //		li.setOnItemClickListener(new OnItemClickListener() {
 //
 //			@Override

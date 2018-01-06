@@ -54,9 +54,9 @@ public class HomeAndLocal extends Activity implements OnItemClickListener {
 	private ListView listViewOnline;
 	// String input = "";
 
-	private List<String> uril;
-	private List<Integer> l2b;
-	private List<Bitmap> bml;
+	private List<String> uril = null;
+	private List<Integer> l2b = null;
+	private List<Bitmap> bml = null;
 	private int lastSearch;
 	private String lastWord;
 
@@ -513,6 +513,88 @@ public class HomeAndLocal extends Activity implements OnItemClickListener {
 	public void jump2Local(View view) {
 		setContentView(R.layout.activity_images_local);
 		wtv = (EditText) findViewById(R.id.key);
+		listViewOnline = (ListView)findViewById(R.id.listOfLocal);
+		if(l2b!=null && l2b.size()>0) {
+		wtv.post(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				// List<String>uris = getSystemPhotoList(LocalImages.this);
+				List<String> uris = LoadLocalImageUris.getAllLocalImagesUri(HomeAndLocal.this);
+				// tv0.setText("size is " + uris.size());
+				// for(String u : uris) {
+				// tv0.setText(tv0.getText()+"\n"+u);
+				// }
+				try {
+					final List<Map<String, Object>> imageList = new ArrayList<Map<String, Object>>();
+					// String word = "SSS";
+					String word = wtv.getText().toString();
+//		listViewOnline.post(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				// TODO Auto-generated method stub
+//				Dialog dl = new Dialog(HomeAndLocal.this);
+//				dl.setTitle(l2b.size()+"");
+//				dl.show();
+//			}
+//		});
+					for (int i = 0; i < l2b.size(); ++i) {
+						final String iUrl = uris.get(l2b.get(i));
+						File ig = new File(iUrl);
+						Map<String, Object> map = new HashMap<String, Object>();
+						Bitmap bm = null;
+						bm = bml.get(l2b.get(i));
+						String info = "Image Name:\t" + ig.getName();
+						info += "\nDate:\t"
+								+ new SimpleDateFormat("yyyy-MM-dd hh:mm").format(new Date(ig.lastModified()));
+						info += "\nSize:\t" + (float) (Math.round((ig.length() * 100 / 1024))) / 100 + "KB";
+						map.put("title", info);
+						// tv.setText(tv.getText().toString() + "\n" + bm.getHeight());
+						// byte[] data = NetUtil.doGetImage(iUrl);
+						// Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
+						// Bitmap bm = new LoadPic().execute(iUrl).get();
+						// map.put("image", bm);
+
+						map.put("image", bm);
+						// map.put("image", NetUtil.doGetBitmap(iUrl));
+						imageList.add(map);
+					}
+					final String[] from = { "title", "image" };
+					final int[] to = { R.id.t0, R.id.imageShow };
+					// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
+					// R.layout.listview, from, to);
+					final SimpleAdapter sa = new SimpleAdapter(HomeAndLocal.this, imageList, R.layout.activity_image_single, from, to);
+					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
+						@Override
+						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
+							// TODO Auto-generated method stub
+							if (aView instanceof ImageView && attentionList instanceof Bitmap) {
+								ImageView iv = (ImageView) aView;
+								iv.setImageBitmap((Bitmap) attentionList);
+								return true;
+							} else if (aView instanceof TextView && attentionList instanceof String) {
+								TextView tt = (TextView) aView;
+								tt.setText((String) attentionList);
+								return true;
+							}
+							return false;
+						}
+					});
+					listViewOnline.post(new Runnable() {
+						@Override
+						public void run() {
+							listViewOnline.setAdapter(sa);
+						}
+					});
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		}
 		new Thread(new Runnable() {
 
 			@Override

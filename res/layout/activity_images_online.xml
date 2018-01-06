@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="jump2Local"
+                android:onClick="jump2Home"
                 android:text="首页" />
         </LinearLayout>
 
