@@ -38,12 +38,15 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 @SuppressWarnings("deprecation")
-public class MainActivity extends Activity {
+public class Online extends Activity {
 	public static final int MY_MSG = 0;
 	public static final int MY_PIC = 1;
 
+	private String lastWord;
 	private List<String> urll;
 	private List<Bitmap> bml;
+
+	private EditText etWd = null;
 	// 查找界面中的控件
 	// final ImageView iv = (ImageView)findViewById(R.id.iv);
 	// final ImageView iv0 = (ImageView)findViewById(R.id.iv0);
@@ -56,6 +59,7 @@ public class MainActivity extends Activity {
 	private ListView li;
 
 	public void searchImages(View view) {
+		bml.clear();
 		new Thread(new Runnable() {
 
 			@Override
@@ -68,9 +72,11 @@ public class MainActivity extends Activity {
 //				final ImageView iv0 = (ImageView) findViewById(R.id.iv0);
 				// 加载百度图片搜索获取的链接
 				// 获取用户输入的关键字
-				String word = wd.getText().toString();
+				final String word = wd.getText().toString();
+//				lastWord = word;
 				// 拼接百度图片搜索的链接
-				String url = "http://image.baidu.com/search/index?tn=baiduimage&word=" + word;
+				final String url = "http://image.baidu.com/search/index?tn=baiduimage&word=" + word;
+//				String url = "https://www.bing.com/";
 				// 拼接bing图片搜索的链接
 //				String host = "https://api.cognitive.microsoft.com";
 //				String path = "/bing/v7.0/images/search";
@@ -81,7 +87,17 @@ public class MainActivity extends Activity {
 //		        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
 //		        connection.setRequestProperty("Ocp-Apim-Subscription-Key", subscriptionKey);
 				try {
-					urll = new LoadImageUrls().execute(url).get();
+//					wd.setText(url);
+					urll = new LoadImageUrls(url).execute().get();
+				lv.post(new Runnable() {
+					@Override
+					public void run() {
+						Dialog dl = new Dialog(Online.this);
+						dl.setTitle(""+urll.size());
+						dl.show();
+					}
+				});
+//					wd.setText(urll.size());
 //					if (tv != null && urls != null) {
 //						for (int i = 0; i < urls.size(); ++i) {
 //							tv.setText(tv.getText().toString() + "\n" + urls.get(i));
@@ -124,7 +140,7 @@ public class MainActivity extends Activity {
 						final int[] to = { R.id.t0, R.id.imageShow};
 						// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
 						// R.layout.listview, from, to);
-						final SimpleAdapter sa = new SimpleAdapter(MainActivity.this, imageList, R.layout.activity_image_single, from,
+						final SimpleAdapter sa = new SimpleAdapter(Online.this, imageList, R.layout.activity_image_single, from,
 								to);
 						sa.setViewBinder(new SimpleAdapter.ViewBinder() {
 							@Override
@@ -161,8 +177,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_images_online);
 
+		etWd = (EditText) findViewById(R.id.word);
 		li = (ListView) findViewById(R.id.imageList);
 		bml = new ArrayList<Bitmap>();
+		
 		// dialog.setMessage("Loading......");
 
 		// LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(
@@ -295,53 +313,43 @@ public class MainActivity extends Activity {
 		});
 
 		li.setOnItemClickListener(new OnItemClickListener() {
-			
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
-				// TODO Auto-generated method stub
-				final Dialog dialog = new Dialog(MainActivity.this);
-				// 以对话框形式显示图片
-				dialog.setContentView(R.layout.activity_image_big);
-				dialog.setTitle("Big Image");
 
-//				if(((LinearLayout)view).getChildCount() < 0) {
-//				final LinearLayout ll = ((LinearLayout)view);
-//				final ImageView ci = (ImageView)(ll.getChildAt(0));
-//				((TextView)findViewById(R.id.debug)).setText(ci.getWidth()+" "+ci.getHeight());
-				final ImageView ivImageShow = (ImageView) dialog.findViewById(R.id.iv);
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
+				setContentView(R.layout.activity_image_big);
+				final ImageView ivImageShow = (ImageView) findViewById(R.id.ivBig);
 				ivImageShow.post(new Runnable() {
-					
+
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
-//						Bitmap bm = Bitmap.createBitmap(ci.getWidth(), ci.getHeight(), Bitmap.Config.ARGB_8888);
-		//				ivImageShow.setImageBitmap(parent.getView getChildAt(position-parent.getFirstVisiblePosition()).getview);
-//						Canvas c = new Canvas(bm);//使用bitmap构建一个Canvas，绘制的所有内容都是绘制在此Bitmap上的
-//						Drawable bgDrawable = ci.getBackground();
-//						bgDrawable.draw(c);//绘制背景
-//						ci.draw(c);//绘制前景
-//						ci.setDrawingCacheEnabled(true);
-//						Bitmap bm = ci.getDrawingCache();
-						ivImageShow.setImageBitmap(bml.get((int)id));
-//						ci.setDrawingCacheEnabled(false);
+						ivImageShow.setImageBitmap(bml.get((int) id));
 					}
 				});
-				Button btnClose = (Button) dialog.findViewById(R.id.fbtn);
-
-				btnClose.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-					}
-				});
-				dialog.show();
-//				}
 			}
 		});
 	}
 	public void jump2Local(View view) {
-		Intent intent = new Intent(MainActivity.this, LocalImages.class);
+		Intent intent = new Intent(Online.this, HomeAndLocal.class);
 		startActivity(intent);
+	}
+	public void jump2List(View view) {
+		setContentView(R.layout.activity_images_home);
+//		li.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
+//				setContentView(R.layout.activity_image_big);
+//				final ImageView ivImageShow = (ImageView) findViewById(R.id.ivBig);
+//				ivImageShow.post(new Runnable() {
+//
+//					@Override
+//					public void run() {
+//						ivImageShow.setImageBitmap(bml.get((int) id));
+//					}
+//				});
+//			}
+//		});
+//		etWd.setText(lastWord);
+//		searchImages(view);
 	}
 }

@@ -45,28 +45,30 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class LocalImages extends Activity implements OnItemClickListener {
+public class HomeAndLocal extends Activity implements OnItemClickListener {
 //	private Spinner spinner;
 	// private ImageView iv;
 	private EditText wtv;
 	// private EditText edit;
 	// private TextView tv0;
-	private ListView iLO;
+	private ListView listViewOnline;
 	// String input = "";
 
 	private List<String> uril;
 	private List<Integer> l2b;
 	private List<Bitmap> bml;
+	private int lastSearch;
+	private String lastWord;
 
 	OnItemClickListener imageClick;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_images_local);
+		setContentView(R.layout.activity_images_home);
 		//初始化
-		iLO = (ListView) findViewById(R.id.list);
-		wtv = (EditText)findViewById(R.id.key);
+//		listViewOnline = (ListView) findViewById(R.id.list);
+//		wtv = (EditText)findViewById(R.id.key);
 		bml = new ArrayList<Bitmap>();
 		l2b = new ArrayList<Integer>();
 
@@ -74,7 +76,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				uril = LoadLocalImageUris.getAllPhotoInfo(LocalImages.this);
+				uril = LoadLocalImageUris.getAllLocalImagesUri(HomeAndLocal.this);
 				try {
 					for (int i = 0; i < uril.size(); ++i) {
 						final String iUrl = uril.get(i);
@@ -169,11 +171,13 @@ public class LocalImages extends Activity implements OnItemClickListener {
 	//// }
 	// }
 	public void searchImagesBySize(View view) {
-		iLO.post(new Runnable() {
+		lastWord = wtv.getText().toString();
+		lastSearch = 0;
+		listViewOnline.post(new Runnable() {
 			@Override
 			public void run() {
 				l2b.clear();
-				List<String> uris = LoadLocalImageUris.getAllPhotoInfo(LocalImages.this);
+				List<String> uris = LoadLocalImageUris.getAllLocalImagesUri(HomeAndLocal.this);
 				try {
 					final List<Map<String, Object>> imageList = new ArrayList<Map<String, Object>>();
 					for (int i = 0; i < uris.size(); ++i) {
@@ -199,7 +203,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 					}
 					final String[] from = { "title", "image" };
 					final int[] to = { R.id.t0, R.id.imageShow };
-					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.activity_image_single, from, to);
+					final SimpleAdapter sa = new SimpleAdapter(HomeAndLocal.this, imageList, R.layout.activity_image_single, from, to);
 					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
 						@Override
 						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
@@ -216,10 +220,10 @@ public class LocalImages extends Activity implements OnItemClickListener {
 							return false;
 						}
 					});
-					iLO.post(new Runnable() {
+					listViewOnline.post(new Runnable() {
 						@Override
 						public void run() {
-							iLO.setAdapter(sa);
+							listViewOnline.setAdapter(sa);
 						}
 					});
 				} catch (Exception e) {
@@ -228,23 +232,24 @@ public class LocalImages extends Activity implements OnItemClickListener {
 				}
 			}
 		});
-
 	}
 
 	public void searchImagesByDate(View view) {
+		lastWord = wtv.getText().toString();
+		lastSearch = 1;
 		// public void onClick(View v) {
 		// new LoadLoacalPhotoCursorTask(LocalImages.this, tv0);
 		// TODO Auto-generated method stub
 		// printImage();
 
-		iLO.post(new Runnable() {
+		listViewOnline.post(new Runnable() {
 
 			@Override
 			public void run() {
 				l2b.clear();
 				// TODO Auto-generated method stub
 				// List<String>uris = getSystemPhotoList(LocalImages.this);
-				List<String> uris = LoadLocalImageUris.getAllPhotoInfo(LocalImages.this);
+				List<String> uril = LoadLocalImageUris.getAllLocalImagesUri(HomeAndLocal.this);
 				// tv0.setText("size is " + uris.size());
 				// for(String u : uris) {
 				// tv0.setText(tv0.getText()+"\n"+u);
@@ -253,71 +258,66 @@ public class LocalImages extends Activity implements OnItemClickListener {
 					final List<Map<String, Object>> imageList = new ArrayList<Map<String, Object>>();
 					// String word = "SSS";
 					// long word = Long.parseLong(wtv.getText().toString());
-					Date key = new SimpleDateFormat("yyyyMMdd").parse(wtv.getText().toString());
+					Date limitDay = new SimpleDateFormat("yyyyMMdd").parse(wtv.getText().toString());
 					// Calendar lmt = Calendar.getInstance();
 					// Calendar fc = Calendar.getInstance();
 					// lmt.setTime(key);
-					for (int i = 0; i < uris.size(); ++i) {
-
-						final String iUrl = uris.get(i);
-						File ig = new File(iUrl);
-						Date fileDate = new Date(ig.lastModified());
-						// fc.setTime(fileDate);
-						// if(fc.get(Calendar.YEAR) == lmt.get(Calendar.YEAR)
-						// && fc.get(Calendar.MONTH) == lmt.get(Calendar.MONTH)
-						// && fc.get(Calendar.DAY_OF_MONTH) == lmt.get(Calendar.DAY_OF_MONTH)) {
-						float ttime = ((float) fileDate.getTime() - key.getTime()) / 1000 / 60 / 60 / 24;
-						int ttime1 = (int) (ttime);
-						if (ttime < 0)
-							ttime1 = 1;
-						if (ttime1 != 0) {
+					for (int i = 0; i < uril.size(); ++i) {
+						final String nowUri = uril.get(i);
+						File nowFile = new File(nowUri);
+						Date fileDate = new Date(nowFile.lastModified());
+						float timeDiff = ((float) fileDate.getTime() - limitDay.getTime()) / 1000 / 60 / 60 / 24;
+						int intTD = (int) (timeDiff);
+						if (timeDiff < 0)
+							intTD = 1;
+						if (intTD != 0) {
 							continue;
 						}
 						l2b.add(i);
-						Map<String, Object> map = new HashMap<String, Object>();
-						Bitmap bm = null;
+						Map<String, Object> m2a = new HashMap<String, Object>();
+						Bitmap tempBm = null;
 						// bm =
 						// BitmapFactory.decodeStream(LocalImagget.getContentResolver().openInputStream(Uri.parse(uris.get(0))));
-						bm = BitmapFactory.decodeFile(iUrl);
-						String info = "Image Name:\t" + ig.getName();
+						tempBm = BitmapFactory.decodeFile(nowUri);
+						String info = "Image Name:\t" + nowFile.getName();
 						info += "\nDate:\t" + new SimpleDateFormat("yyyy-MM-dd hh:mm").format(fileDate);
-						info += "\nSize:\t" + (float) (Math.round((ig.length() * 100 / 1024))) / 100 + "KB";
-						map.put("title", info);
+						info += "\nSize:\t" + (float) (Math.round((nowFile.length() * 100 / 1024))) / 100 + "KB";
+						m2a.put("info", info);
 						// tv.setText(tv.getText().toString() + "\n" + bm.getHeight());
 						// byte[] data = NetUtil.doGetImage(iUrl);
 						// Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
 						// Bitmap bm = new LoadPic().execute(iUrl).get();
 						// map.put("image", bm);
 
-						map.put("image", bm);
+						m2a.put("image", tempBm);
 						// map.put("image", NetUtil.doGetBitmap(iUrl));
-						imageList.add(map);
+						imageList.add(m2a);
 					}
-					final String[] from = { "title", "image" };
+					final String[] from = { "info", "image" };
 					final int[] to = { R.id.t0, R.id.imageShow };
 					// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
 					// R.layout.listview, from, to);
-					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.activity_image_single, from, to);
-					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
+					final SimpleAdapter map2ListView = new SimpleAdapter(HomeAndLocal.this, imageList, R.layout.activity_image_single, from, to);
+					map2ListView.setViewBinder(new SimpleAdapter.ViewBinder() {
 						@Override
-						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
+						public boolean setViewValue(View viewInListView, Object attentionList, String textRepresentation) {
 							// TODO Auto-generated method stub
-							if (aView instanceof ImageView && attentionList instanceof Bitmap) {
-								ImageView iv = (ImageView) aView;
-								iv.setImageBitmap((Bitmap) attentionList);
+							if (viewInListView instanceof ImageView && attentionList instanceof Bitmap) {
+								ImageView imageViewInListView = (ImageView) viewInListView;
+								imageViewInListView.setImageBitmap((Bitmap) attentionList);
 								return true;
-							} else if (aView instanceof TextView && attentionList instanceof String) {
-								TextView tt = (TextView) aView;
-								tt.setText((String) attentionList);
+							} else if (viewInListView instanceof TextView && attentionList instanceof String) {
+								TextView textViewInListView = (TextView) viewInListView;
+								textViewInListView.setText((String) attentionList);
 								return true;
 							}
 							return false;
 						}
 					});
-					iLO.post(new Runnable() {
+					listViewOnline.post(new Runnable() {
 						@Override
 						public void run() {
-							iLO.setAdapter(sa);
+							listViewOnline.setAdapter(map2ListView);
 						}
 					});
 				} catch (Exception e) {
@@ -331,19 +331,21 @@ public class LocalImages extends Activity implements OnItemClickListener {
 	}
 
 	public void searchImagesByName(View view) {
+		lastWord = wtv.getText().toString();
+		lastSearch = 2;
 		// public void onClick(View v) {
 		// new LoadLoacalPhotoCursorTask(LocalImages.this, tv0);
 		// TODO Auto-generated method stub
 		// printImage();
 
-		iLO.post(new Runnable() {
+		listViewOnline.post(new Runnable() {
 
 			@Override
 			public void run() {
 				l2b.clear();
 				// TODO Auto-generated method stub
 				// List<String>uris = getSystemPhotoList(LocalImages.this);
-				List<String> uris = LoadLocalImageUris.getAllPhotoInfo(LocalImages.this);
+				List<String> uris = LoadLocalImageUris.getAllLocalImagesUri(HomeAndLocal.this);
 				// tv0.setText("size is " + uris.size());
 				// for(String u : uris) {
 				// tv0.setText(tv0.getText()+"\n"+u);
@@ -383,7 +385,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 					final int[] to = { R.id.t0, R.id.imageShow };
 					// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
 					// R.layout.listview, from, to);
-					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.activity_image_single, from, to);
+					final SimpleAdapter sa = new SimpleAdapter(HomeAndLocal.this, imageList, R.layout.activity_image_single, from, to);
 					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
 						@Override
 						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
@@ -400,10 +402,10 @@ public class LocalImages extends Activity implements OnItemClickListener {
 							return false;
 						}
 					});
-					iLO.post(new Runnable() {
+					listViewOnline.post(new Runnable() {
 						@Override
 						public void run() {
-							iLO.setAdapter(sa);
+							listViewOnline.setAdapter(sa);
 						}
 					});
 				} catch (Exception e) {
@@ -415,246 +417,141 @@ public class LocalImages extends Activity implements OnItemClickListener {
 
 		// }
 	}
-//	public void searchImagesOption(View view) {
-//		switch((int)spinner.getSelectedItemId()) {
-//		case 0:
-//			searchImages(view);
-//			break;
-//		case 1:
-//			searchImagesByName(view);
-//			break;
-//		case 2:
-//			searchImagesByDate(view);
-//			break;
-//		case 3:
-//			searchImagesBySize(view);
-//			break;
-//		}
-//	}
 
-	// ba.setOnClickListener(new OnClickListener() {
-	public void searchImages(View view) {
+	public void jump2Home(View view) {
+		setContentView(R.layout.activity_images_home);
+	}
+
+	public void searchImagesAll(View view) {
+		lastWord = wtv.getText().toString();
+//		lastSearch = 3;
 		// public void onClick(View v) {
 		// new LoadLoacalPhotoCursorTask(LocalImages.this, tv0);
 		// TODO Auto-generated method stub
 		// printImage();
 
-		setContentView(R.layout.activity_search_local);
-		new Thread(new Runnable() {
+		listViewOnline.post(new Runnable() {
 
 			@Override
 			public void run() {
+				l2b.clear();
 				// TODO Auto-generated method stub
 				// List<String>uris = getSystemPhotoList(LocalImages.this);
-				List<String> uris = LoadLocalImageUris.getAllPhotoInfo(LocalImages.this);
+				List<String> uris = LoadLocalImageUris.getAllLocalImagesUri(HomeAndLocal.this);
 				// tv0.setText("size is " + uris.size());
 				// for(String u : uris) {
 				// tv0.setText(tv0.getText()+"\n"+u);
 				// }
-				iLO = (ListView) findViewById(R.id.listOfLocal);
-				iLO.post(new Runnable() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-				//初始化
-				wtv = (EditText)findViewById(R.id.key);
-						
-				iLO.setOnItemClickListener(new OnItemClickListener() {
-			
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
-				// TODO Auto-generated method stub
-				final Dialog dialog = new Dialog(LocalImages.this);
-				// 以对话框形式显示图片
-				dialog.setContentView(R.layout.activity_image_big);
-				dialog.setTitle("Big Image");
+				try {
+					final List<Map<String, Object>> imageList = new ArrayList<Map<String, Object>>();
+					// String word = "SSS";
+					String word = wtv.getText().toString();
+					for (int i = 0; i < uris.size(); ++i) {
+						final String iUrl = uris.get(i);
+						File ig = new File(iUrl);
+						l2b.add(i);
+						Map<String, Object> map = new HashMap<String, Object>();
+						Bitmap bm = null;
+						// bm =
+						// BitmapFactory.decodeStream(LocalImages.this.getContentResolver().openInputStream(Uri.parse(uris.get(0))));
+						bm = BitmapFactory.decodeFile(iUrl);
+						String info = "Image Name:\t" + ig.getName();
+						info += "\nDate:\t"
+								+ new SimpleDateFormat("yyyy-MM-dd hh:mm").format(new Date(ig.lastModified()));
+						info += "\nSize:\t" + (float) (Math.round((ig.length() * 100 / 1024))) / 100 + "KB";
+						map.put("title", info);
+						// tv.setText(tv.getText().toString() + "\n" + bm.getHeight());
+						// byte[] data = NetUtil.doGetImage(iUrl);
+						// Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
+						// Bitmap bm = new LoadPic().execute(iUrl).get();
+						// map.put("image", bm);
 
-//				if(((LinearLayout)view).getChildCount() < 0) {
-//				final LinearLayout ll = ((LinearLayout)view);
-//				final ImageView ci = (ImageView)(ll.getChildAt(0));
-//				((TextView)findViewById(R.id.debug)).setText(ci.getWidth()+" "+ci.getHeight());
-				final ImageView ivImageShow = (ImageView) dialog.findViewById(R.id.iv);
-				ivImageShow.post(new Runnable() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-//						Bitmap bm = Bitmap.createBitmap(ci.getWidth(), ci.getHeight(), Bitmap.Config.ARGB_8888);
-		//				ivImageShow.setImageBitmap(parent.getView getChildAt(position-parent.getFirstVisiblePosition()).getview);
-//						Canvas c = new Canvas(bm);//使用bitmap构建一个Canvas，绘制的所有内容都是绘制在此Bitmap上的
-//						Drawable bgDrawable = ci.getBackground();
-//						bgDrawable.draw(c);//绘制背景
-//						ci.draw(c);//绘制前景
-//						ci.setDrawingCacheEnabled(true);
-//						Bitmap bm = ci.getDrawingCache();
-						ivImageShow.setImageBitmap(bml.get(l2b.get((int)id)));
-//						ci.setDrawingCacheEnabled(false);
+						map.put("image", bm);
+						// map.put("image", NetUtil.doGetBitmap(iUrl));
+						imageList.add(map);
 					}
-				});
-				Button btnClose = (Button) dialog.findViewById(R.id.fbtn);
-
-				btnClose.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-					}
-					
-				});
-				dialog.show();
-//				}
+					final String[] from = { "title", "image" };
+					final int[] to = { R.id.t0, R.id.imageShow };
+					// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
+					// R.layout.listview, from, to);
+					final SimpleAdapter sa = new SimpleAdapter(HomeAndLocal.this, imageList, R.layout.activity_image_single, from, to);
+					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
+						@Override
+						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
+							// TODO Auto-generated method stub
+							if (aView instanceof ImageView && attentionList instanceof Bitmap) {
+								ImageView iv = (ImageView) aView;
+								iv.setImageBitmap((Bitmap) attentionList);
+								return true;
+							} else if (aView instanceof TextView && attentionList instanceof String) {
+								TextView tt = (TextView) aView;
+								tt.setText((String) attentionList);
+								return true;
+							}
+							return false;
+						}
+					});
+					listViewOnline.post(new Runnable() {
+						@Override
+						public void run() {
+							listViewOnline.setAdapter(sa);
+						}
+					});
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
-					}
-				});
-//				try {
-//					final List<Map<String, Object>> imageList = new ArrayList<Map<String, Object>>();
-//					for (int i = 0; i < uris.size(); ++i) {
-//						final String iUrl = uris.get(i);
-//						Map<String, Object> map = new HashMap<String, Object>();
-//						Bitmap bm = null;
-//						// bm =
-//						// BitmapFactory.decodeStream(LocalImages.this.getContentResolver().openInputStream(Uri.parse(uris.get(0))));
-//						bm = BitmapFactory.decodeFile(iUrl);
-//						File ig = new File(iUrl);
-//						// TextView wtv = (TextView)findViewById(R.id.word);
-//						// wtv.setText(ig.getName());
-//						// bn.setText(ig.getName());
-//						String info = "Image Name:\t" + ig.getName();
-//						info += "\nDate:\t"
-//								+ new SimpleDateFormat("yyyy-MM-dd hh:mm").format(new Date(ig.lastModified()));
-//						info += "\nSize:\t" + (float) (Math.round((ig.length() * 100 / 1024))) / 100 + "KB";
-//						map.put("title", info);
-//						// tv.setText(tv.getText().toString() + "\n" + bm.getHeight());
-//						// byte[] data = NetUtil.doGetImage(iUrl);
-//						// Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
-//						// Bitmap bm = new LoadPic().execute(iUrl).get();
-//						// map.put("image", bm);
-//
-//						map.put("image", bm);
-//						// map.put("image", NetUtil.doGetBitmap(iUrl));
-//						imageList.add(map);
-//					}
-//					final String[] from = { "title", "image" };
-//					final int[] to = { R.id.t0, R.id.imageShow };
-//					// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
-//					// R.layout.listview, from, to);
-//					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.a_image, from, to);
-//					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
-//						@Override
-//						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
-//							// TODO Auto-generated method stub
-//							if (aView instanceof ImageView && attentionList instanceof Bitmap) {
-//								ImageView iv = (ImageView) aView;
-//								iv.setImageBitmap((Bitmap) attentionList);
-//								return true;
-//							} else if (aView instanceof TextView && attentionList instanceof String) {
-//								TextView tt = (TextView) aView;
-//								tt.setText((String) attentionList);
-//								return true;
-//							}
-//							return false;
-//						}
-//					});
-//					iLO.post(new Runnable() {
-//						@Override
-//						public void run() {
-//							iLO.setAdapter(sa);
-//						}
-//					});
-//				} catch (Exception e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-			}
-		}).start();
 
 		// }
+	}
+	public void jump2List(View view) {
+//		jump2Home(view);
+		jump2Local(view);
+	}
+	public void jump2Local(View view) {
+		setContentView(R.layout.activity_images_local);
+		wtv = (EditText) findViewById(R.id.key);
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				listViewOnline = (ListView) findViewById(R.id.listOfLocal);
+				listViewOnline.post(new Runnable() {
+					@Override
+					public void run() {
+						// 初始化
+
+						listViewOnline.setOnItemClickListener(new OnItemClickListener() {
+
+							@Override
+							public void onItemClick(AdapterView<?> parent, View view, final int position,
+									final long id) {
+								setContentView(R.layout.activity_image_big);
+								final ImageView ivImageShow = (ImageView) findViewById(R.id.ivBig);
+								ivImageShow.post(new Runnable() {
+
+									@Override
+									public void run() {
+										ivImageShow.setImageBitmap(bml.get(l2b.get((int) id)));
+									}
+								});
+							}
+						});
+					}
+				});
+			}
+		}).start();
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		// TODO Auto-generated method stub
 
 	}
 
-	// @Override
-	// public void onItemClick(AdapterView<?> parent, View view, int position, long
-	// id) {
-	// // TODO Auto-generated method stub
-	// btnClose.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// dialog.dismiss();
-	// }
-	//
-	// });
-	// }
-	// protected void printImage() {
-	//
-	//// try {
-	//// @SuppressWarnings("unchecked")
-	//// ArrayList<Uri> uris = (ArrayList<Uri>) new
-	// LoadLoacalPhotoCursorTask(this).get();
-	//// for(Uri uu : uris) {
-	//// tv0.setText(tv0.toString()+"\n"+uu.toString());
-	//// }
-	//// } catch (InterruptedException e) {
-	//// // TODO Auto-generated catch block
-	//// e.printStackTrace();
-	//// } catch (ExecutionException e) {
-	//// // TODO Auto-generated catch block
-	//// e.printStackTrace();
-	//// }
-	// // TODO Auto-generated method stub
-	// Intent intent = new Intent();
-	// intent.setType("image/*");
-	// intent.setAction(Intent.ACTION_GET_CONTENT);
-	//// intent.setAction(Intent.ACTION_DATE_CHANGED);
-	//
-	// startActivityForResult(intent, 1);
-	// }
-
-	// @Override
-	// protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	// {
-	// if (resultCode == RESULT_OK) {
-	// Uri uri = data.getData();
-	//// Log.e("uri", uri.toString());
-	// ContentResolver cr = this.getContentResolver();
-	// try {
-	// Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
-	// iv.setImageBitmap(bitmap);
-	// } catch (FileNotFoundException e) {
-	// Log.e("Exception", e.getMessage(), e);
-	// }
-	// }
-	// super.onActivityResult(requestCode, resultCode, data);
-	// }
-	// public static List<String> getSystemPhotoList(Context context) {
-	// List<String> result = new ArrayList<String>();
-	// Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-	//
-	// ContentResolver contentResolver = context.getContentResolver();
-	// Cursor cursor = contentResolver.query(uri, null, null, null, null);
-	// if (cursor == null || cursor.getCount() <= 0) return null; // 没有图片
-	// while (cursor.moveToNext()) {
-	// int index = cursor
-	// .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-	// String path = cursor.getString(index); // 文件地址
-	// File file = new File(path);
-	// if (file.exists()) {
-	// result.add(path);
-	//// Log.i(TAG, path);
-	// }
-	// }
-	//
-	// return result;
-	// }
 	public void jump2Online(View view) {
-		Intent intent = new Intent(LocalImages.this, MainActivity.class);
+		Intent intent = new Intent(HomeAndLocal.this, Online.class);
 		startActivity(intent);
 	}
 }
