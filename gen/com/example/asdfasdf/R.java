@@ -15,31 +15,30 @@ public final class R {
         public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int bts=0x7f060008;
+        public static final int bts=0x7f06000a;
         public static final int fbSN=0x7f060005;
         public static final int fbtn=0x7f060003;
-        public static final int imageList=0x7f060009;
+        public static final int imageList=0x7f060008;
         public static final int imageShow=0x7f060004;
         public static final int ivBig=0x7f060001;
-        public static final int key=0x7f06000a;
-        public static final int list=0x7f060006;
-        public static final int listOfLocal=0x7f06000b;
+        public static final int key=0x7f060007;
+        public static final int listOfLocal=0x7f060006;
         public static final int ll0=0x7f060000;
         public static final int t0=0x7f060002;
-        public static final int word=0x7f060007;
+        public static final int word=0x7f060009;
     }
     public static final class layout {
         public static final int activity_image_big=0x7f030000;
         public static final int activity_image_single=0x7f030001;
-        public static final int activity_images_local=0x7f030002;
-        public static final int activity_images_online=0x7f030003;
-        public static final int activity_search_local=0x7f030004;
+        public static final int activity_images_home=0x7f030002;
+        public static final int activity_images_local=0x7f030003;
+        public static final int activity_images_online=0x7f030004;
     }
     public static final class string {
         public static final int app_name=0x7f040000;
         public static final int hello_world=0x7f040001;
         public static final int title_activity_big_image=0x7f040003;
-        public static final int title_activity_local_images=0x7f040002;
+        public static final int title_activity_homeAndLocal=0x7f040002;
     }
     public static final class style {
         /** 

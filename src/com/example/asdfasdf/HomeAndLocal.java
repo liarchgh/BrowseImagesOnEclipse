@@ -45,7 +45,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class LocalImages extends Activity implements OnItemClickListener {
+public class HomeAndLocal extends Activity implements OnItemClickListener {
 //	private Spinner spinner;
 	// private ImageView iv;
 	private EditText wtv;
@@ -65,10 +65,10 @@ public class LocalImages extends Activity implements OnItemClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_images_local);
+		setContentView(R.layout.activity_images_home);
 		//初始化
-		listViewOnline = (ListView) findViewById(R.id.list);
-		wtv = (EditText)findViewById(R.id.key);
+//		listViewOnline = (ListView) findViewById(R.id.list);
+//		wtv = (EditText)findViewById(R.id.key);
 		bml = new ArrayList<Bitmap>();
 		l2b = new ArrayList<Integer>();
 
@@ -76,7 +76,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				uril = LoadLocalImageUris.getAllLocalImagesUri(LocalImages.this);
+				uril = LoadLocalImageUris.getAllLocalImagesUri(HomeAndLocal.this);
 				try {
 					for (int i = 0; i < uril.size(); ++i) {
 						final String iUrl = uril.get(i);
@@ -177,7 +177,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 			@Override
 			public void run() {
 				l2b.clear();
-				List<String> uris = LoadLocalImageUris.getAllLocalImagesUri(LocalImages.this);
+				List<String> uris = LoadLocalImageUris.getAllLocalImagesUri(HomeAndLocal.this);
 				try {
 					final List<Map<String, Object>> imageList = new ArrayList<Map<String, Object>>();
 					for (int i = 0; i < uris.size(); ++i) {
@@ -203,7 +203,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 					}
 					final String[] from = { "title", "image" };
 					final int[] to = { R.id.t0, R.id.imageShow };
-					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.activity_image_single, from, to);
+					final SimpleAdapter sa = new SimpleAdapter(HomeAndLocal.this, imageList, R.layout.activity_image_single, from, to);
 					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
 						@Override
 						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
@@ -249,7 +249,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 				l2b.clear();
 				// TODO Auto-generated method stub
 				// List<String>uris = getSystemPhotoList(LocalImages.this);
-				List<String> uril = LoadLocalImageUris.getAllLocalImagesUri(LocalImages.this);
+				List<String> uril = LoadLocalImageUris.getAllLocalImagesUri(HomeAndLocal.this);
 				// tv0.setText("size is " + uris.size());
 				// for(String u : uris) {
 				// tv0.setText(tv0.getText()+"\n"+u);
@@ -297,7 +297,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 					final int[] to = { R.id.t0, R.id.imageShow };
 					// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
 					// R.layout.listview, from, to);
-					final SimpleAdapter map2ListView = new SimpleAdapter(LocalImages.this, imageList, R.layout.activity_image_single, from, to);
+					final SimpleAdapter map2ListView = new SimpleAdapter(HomeAndLocal.this, imageList, R.layout.activity_image_single, from, to);
 					map2ListView.setViewBinder(new SimpleAdapter.ViewBinder() {
 						@Override
 						public boolean setViewValue(View viewInListView, Object attentionList, String textRepresentation) {
@@ -345,7 +345,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 				l2b.clear();
 				// TODO Auto-generated method stub
 				// List<String>uris = getSystemPhotoList(LocalImages.this);
-				List<String> uris = LoadLocalImageUris.getAllLocalImagesUri(LocalImages.this);
+				List<String> uris = LoadLocalImageUris.getAllLocalImagesUri(HomeAndLocal.this);
 				// tv0.setText("size is " + uris.size());
 				// for(String u : uris) {
 				// tv0.setText(tv0.getText()+"\n"+u);
@@ -385,7 +385,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 					final int[] to = { R.id.t0, R.id.imageShow };
 					// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
 					// R.layout.listview, from, to);
-					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.activity_image_single, from, to);
+					final SimpleAdapter sa = new SimpleAdapter(HomeAndLocal.this, imageList, R.layout.activity_image_single, from, to);
 					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
 						@Override
 						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
@@ -418,8 +418,8 @@ public class LocalImages extends Activity implements OnItemClickListener {
 		// }
 	}
 
-	public void jump2List(View view) {
-		setContentView(R.layout.activity_images_local);
+	public void jump2Home(View view) {
+		setContentView(R.layout.activity_images_home);
 	}
 
 	public void searchImagesAll(View view) {
@@ -437,7 +437,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 				l2b.clear();
 				// TODO Auto-generated method stub
 				// List<String>uris = getSystemPhotoList(LocalImages.this);
-				List<String> uris = LoadLocalImageUris.getAllLocalImagesUri(LocalImages.this);
+				List<String> uris = LoadLocalImageUris.getAllLocalImagesUri(HomeAndLocal.this);
 				// tv0.setText("size is " + uris.size());
 				// for(String u : uris) {
 				// tv0.setText(tv0.getText()+"\n"+u);
@@ -474,7 +474,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 					final int[] to = { R.id.t0, R.id.imageShow };
 					// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
 					// R.layout.listview, from, to);
-					final SimpleAdapter sa = new SimpleAdapter(LocalImages.this, imageList, R.layout.activity_image_single, from, to);
+					final SimpleAdapter sa = new SimpleAdapter(HomeAndLocal.this, imageList, R.layout.activity_image_single, from, to);
 					sa.setViewBinder(new SimpleAdapter.ViewBinder() {
 						@Override
 						public boolean setViewValue(View aView, Object attentionList, String textRepresentation) {
@@ -506,8 +506,13 @@ public class LocalImages extends Activity implements OnItemClickListener {
 
 		// }
 	}
-	public void searchImages(View view) {
-		setContentView(R.layout.activity_search_local);
+	public void jump2List(View view) {
+//		jump2Home(view);
+		jump2Local(view);
+	}
+	public void jump2Local(View view) {
+		setContentView(R.layout.activity_images_local);
+		wtv = (EditText) findViewById(R.id.key);
 		new Thread(new Runnable() {
 
 			@Override
@@ -517,7 +522,6 @@ public class LocalImages extends Activity implements OnItemClickListener {
 					@Override
 					public void run() {
 						// 初始化
-						wtv = (EditText) findViewById(R.id.key);
 
 						listViewOnline.setOnItemClickListener(new OnItemClickListener() {
 
@@ -547,7 +551,7 @@ public class LocalImages extends Activity implements OnItemClickListener {
 	}
 
 	public void jump2Online(View view) {
-		Intent intent = new Intent(LocalImages.this, MainActivity.class);
+		Intent intent = new Intent(HomeAndLocal.this, Online.class);
 		startActivity(intent);
 	}
 }

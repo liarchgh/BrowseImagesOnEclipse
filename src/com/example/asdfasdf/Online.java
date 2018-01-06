@@ -38,7 +38,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 @SuppressWarnings("deprecation")
-public class MainActivity extends Activity {
+public class Online extends Activity {
 	public static final int MY_MSG = 0;
 	public static final int MY_PIC = 1;
 
@@ -72,10 +72,11 @@ public class MainActivity extends Activity {
 //				final ImageView iv0 = (ImageView) findViewById(R.id.iv0);
 				// 加载百度图片搜索获取的链接
 				// 获取用户输入的关键字
-				String word = wd.getText().toString();
-				lastWord = word;
+				final String word = wd.getText().toString();
+//				lastWord = word;
 				// 拼接百度图片搜索的链接
-				String url = "http://image.baidu.com/search/index?tn=baiduimage&word=" + word;
+				final String url = "http://image.baidu.com/search/index?tn=baiduimage&word=" + word;
+//				String url = "https://www.bing.com/";
 				// 拼接bing图片搜索的链接
 //				String host = "https://api.cognitive.microsoft.com";
 //				String path = "/bing/v7.0/images/search";
@@ -86,7 +87,17 @@ public class MainActivity extends Activity {
 //		        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
 //		        connection.setRequestProperty("Ocp-Apim-Subscription-Key", subscriptionKey);
 				try {
-					urll = new LoadImageUrls().execute(url).get();
+//					wd.setText(url);
+					urll = new LoadImageUrls(url).execute().get();
+				lv.post(new Runnable() {
+					@Override
+					public void run() {
+						Dialog dl = new Dialog(Online.this);
+						dl.setTitle(""+urll.size());
+						dl.show();
+					}
+				});
+//					wd.setText(urll.size());
 //					if (tv != null && urls != null) {
 //						for (int i = 0; i < urls.size(); ++i) {
 //							tv.setText(tv.getText().toString() + "\n" + urls.get(i));
@@ -129,7 +140,7 @@ public class MainActivity extends Activity {
 						final int[] to = { R.id.t0, R.id.imageShow};
 						// final SimpleAdapter sa = new SimpleAdapter(Images.this, listMap,
 						// R.layout.listview, from, to);
-						final SimpleAdapter sa = new SimpleAdapter(MainActivity.this, imageList, R.layout.activity_image_single, from,
+						final SimpleAdapter sa = new SimpleAdapter(Online.this, imageList, R.layout.activity_image_single, from,
 								to);
 						sa.setViewBinder(new SimpleAdapter.ViewBinder() {
 							@Override
@@ -169,6 +180,7 @@ public class MainActivity extends Activity {
 		etWd = (EditText) findViewById(R.id.word);
 		li = (ListView) findViewById(R.id.imageList);
 		bml = new ArrayList<Bitmap>();
+		
 		// dialog.setMessage("Loading......");
 
 		// LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(
@@ -317,12 +329,11 @@ public class MainActivity extends Activity {
 		});
 	}
 	public void jump2Local(View view) {
-		Intent intent = new Intent(MainActivity.this, LocalImages.class);
+		Intent intent = new Intent(Online.this, HomeAndLocal.class);
 		startActivity(intent);
 	}
-
 	public void jump2List(View view) {
-		setContentView(R.layout.activity_images_local);
+		setContentView(R.layout.activity_images_home);
 //		li.setOnItemClickListener(new OnItemClickListener() {
 //
 //			@Override

@@ -1,0 +1,52 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="${relativePackage}.${activityClass}" >
+
+<!--     <TextView
+        android:id="@+id/debug"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:text="Hello World!" />
+ -->
+
+<RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="221dp"
+    >
+    
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:gravity="center"
+			android:layout_centerInParent="true"  
+            android:onClick="jump2Online"
+            android:textSize="13pt"
+            android:text="在线搜索" />
+</RelativeLayout>
+
+    <!--
+     <ImageView 
+        android:id="@+id/fiv0"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+    -->
+
+<RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="221dp"
+    >
+    <Button
+        android:id="@+id/fbSN"
+		android:layout_width="wrap_content"
+		android:layout_height="80dp"
+		android:gravity="center"
+		android:layout_centerHorizontal="true"  
+		android:textSize="13pt"
+        android:onClick="jump2Local"
+        android:text="本地搜索" />
+
+    </RelativeLayout>
+</LinearLayout>
