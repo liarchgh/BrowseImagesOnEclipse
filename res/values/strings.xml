@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ImageShow</string>
+    <string name="app_name">在线搜索</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_local_images">本地图片</string>
-    <string name="title_activity_big_image">Enlarge</string>
+    <string name="title_activity_homeAndLocal">图片浏览</string>
+    <string name="title_activity_big_image">大图</string>
 
 </resources>

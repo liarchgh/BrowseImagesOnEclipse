@@ -4,38 +4,57 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-<LinearLayout 
-    android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:orientation="horizontal">
-             <EditText
-                android:id="@+id/word"
-                android:layout_width="240dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="linux" />
-
-<LinearLayout 
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-             <Button
-                 android:id="@+id/bts"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:onClick="searchImages"
-                 android:layout_weight="1"
-                 android:text="Search" />
+    android:orientation="vertical" >
 
-             <Button
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:onClick="jump2Local"
-                 android:layout_weight="1"
-                 android:text="Local" />
-     </LinearLayout>
-     </LinearLayout>
+    <ListView
+        android:id="@+id/imageList"
+        android:layout_width="match_parent"
+        android:layout_height="292dp"
+        android:layout_weight="0.63" >
+    </ListView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/word"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/bts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="searchImages"
+                android:text="搜索" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="jump2Local"
+                android:text="首页" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/word"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="linux" />
+
+    </RelativeLayout>
+</LinearLayout>
 
 <!-- 	<ImageView
 		android:id="@+id/iv0"
@@ -50,10 +69,4 @@
         android:layout_height="138dp"
         android:text="Hello World!" />
  -->
-	<ListView
-		android:id="@+id/imageList"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		>
-</ListView>
 </LinearLayout>

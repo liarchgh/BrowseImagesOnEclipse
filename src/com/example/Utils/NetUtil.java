@@ -49,6 +49,7 @@ public class NetUtil {
         URL url = new URL(address);
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
         conn.setConnectTimeout(10000);
+//        conn.setConnectTimeout(10);
 //        conn.setRequestProperty("Accept", "image/jepg,*/*");
 //        conn.setRequestProperty("Connection", "close");
         conn.setRequestMethod("GET");
@@ -71,7 +72,7 @@ public class NetUtil {
             out.close();
         }
         catch(Exception e){
-//        	msg = "e";
+        	msg = "e";
         }
 		return msg;
     }
